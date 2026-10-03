@@ -32,8 +32,8 @@ jobs:
           path = Path("README.md")
           content = path.read_text()
 
-          start_marker = "<!-- AUTO_UPDATE_START -->"
-          end_marker = "<!-- AUTO_UPDATE_END -->"
+          start_marker = "<!-- ACTIVITY:START -->"
+          end_marker = "<!-- ACTIVITY:END -->"
 
           if start_marker not in content or end_marker not in content:
               raise SystemExit("README markers not found")
