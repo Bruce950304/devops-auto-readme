@@ -31,7 +31,7 @@ jobs:
 
           path = Path("README.md")
           content = path.read_text()
-
+          
           start_marker = "<!-- ACTIVITY:START -->"
           end_marker = "<!-- ACTIVITY:END -->"
 
