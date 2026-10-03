@@ -1,0 +1,71 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update README
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+        run: |
+          echo "Updating README..."
+
+          DATE=$(date '+%Y-%m-%d %H:%M:%S')
+
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime
+
+          path = Path("README.md")
+          content = path.read_text()
+
+          start_marker = "<!-- AUTO_UPDATE_START -->"
+          end_marker = "<!-- AUTO_UPDATE_END -->"
+
+          if start_marker not in content or end_marker not in content:
+              raise SystemExit("README markers not found")
+
+          start = content.index(start_marker) + len(start_marker)
+          end = content.index(end_marker)
+
+          activity = f"""
+          
+          - README automatically updated by GitHub Actions
+          - Update time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+          """
+
+          new_content = (
+              content[:start]
+              + activity
+              + content[end:]
+          )
+
+          path.write_text(new_content)
+          PY
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add README.md
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update README with recent activity"
+            git push
+          fi
