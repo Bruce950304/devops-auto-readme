@@ -17,3 +17,7 @@ DevOps Assignment 3 - Auto-Updating README with GitHub Actions
 ## DevOps Assignment 3
 
 This project demonstrates automated README updates using GitHub Actions.
+
+### Additional Automation
+
+This section demonstrates automatic pull request labeling.
